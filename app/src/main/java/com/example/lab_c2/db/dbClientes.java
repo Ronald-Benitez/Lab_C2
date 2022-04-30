@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.lab_c2.Clientes_Activity;
 import com.example.lab_c2.entidades.Clientes;
+import com.example.lab_c2.entidades.vehiculosCliente;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -64,6 +67,53 @@ public class dbClientes extends dbHelper{
         return listaClientes;
     }
 
+    //VEHICULOS ALQUILADOR POR CLIENTE
+    public ArrayList<vehiculosCliente> listadoVehiculosCliente(int idCliente){
+        ArrayList<vehiculosCliente> lista = new ArrayList<>();
+        vehiculosCliente vehi = null;
+        Cursor cursor = null;
+
+
+
+        try{
+            dbHelper dbhelper = new dbHelper(context);
+            SQLiteDatabase db = dbhelper.getWritableDatabase();
+            cursor = db.rawQuery("SELECT alquileres.idA,alquileres.fechaInicio,alquileres.fechaFin,alquileres.tiempoAlquiler,alquileres.precioAlquiler,vehiculos.nombre,vehiculos.placa " +
+                    "as 'nombreV',clientes.nombre as 'nombreC' FROM alquileres INNER JOIN vehiculos  ON alquileres.idV = vehiculos.idV " +
+                    "INNER JOIN clientes ON alquileres.idC = clientes.idC WHERE clientes.idC='"+idCliente+"'",null);
+
+            if (cursor.moveToFirst()){
+                do {
+                    vehi = new vehiculosCliente();
+
+                    vehi.setFecchaInicio(cursor.getString(1));
+
+                    vehi.setFecchaFin(cursor.getString(2));
+
+                    vehi.setTiempoAlquiler(cursor.getString(3));
+
+                    vehi.setPrecioAlquiler(cursor.getString(4));
+
+                    vehi.setNombreVehiculo(cursor.getString(5));
+
+                    vehi.setPlaca(cursor.getString(6));
+
+                    lista.add(vehi);
+
+                }while (cursor.moveToNext());
+            }cursor.close();
+            Toast.makeText(context, "Consulta hecha", Toast.LENGTH_SHORT).show();
+            db.close();
+        }
+        catch (Exception e){
+            Toast.makeText(context, "error consulta"+e.toString(), Toast.LENGTH_SHORT).show();
+            Log.d("ErrorBase: ", e.toString());
+            e.toString();
+        }
+
+        return lista;
+    }
+
     public Clientes findClientes(String clave, String valor){
         dbHelper dbhelper = new dbHelper(context);
         SQLiteDatabase db = dbhelper.getWritableDatabase();
@@ -107,6 +157,8 @@ public class dbClientes extends dbHelper{
         cursorClientes.close();
         return  lista;
     }
+
+
 
     public Clientes mostrarCliente(int idc){
         dbHelper dbhelper = new dbHelper(context);
@@ -164,4 +216,6 @@ public class dbClientes extends dbHelper{
         return encontrado;
 
     }
+
+
 }

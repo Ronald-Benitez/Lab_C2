@@ -2,6 +2,8 @@ package com.example.lab_c2;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,14 +15,23 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.lab_c2.adapters.lista_VehiculosCliente_adapter;
 import com.example.lab_c2.db.dbClientes;
 import com.example.lab_c2.entidades.Clientes;
+import com.example.lab_c2.entidades.vehiculosCliente;
+
+import java.util.ArrayList;
 
 public class verCliente extends AppCompatActivity {
     private TextView idtext; //textViewID
     private EditText nombretxt;
     private Button editarBtn,eliminarBtn;
     Clientes cliente;
+
+    RecyclerView listaVehiculosCliente;
+    ArrayList<vehiculosCliente> listaCCvehiculos;
+
+
 
     boolean pasar =false;
     boolean modoEdicion = false;
@@ -35,6 +46,12 @@ public class verCliente extends AppCompatActivity {
         nombretxt = findViewById(R.id.NombreClientetxt2);
         editarBtn = findViewById(R.id.botonActulizarCliente);
         eliminarBtn = findViewById(R.id.botonEliminarCliente);
+        listaVehiculosCliente = findViewById(R.id.vehiculosDeUsuarios);
+        listaVehiculosCliente.setLayoutManager(new LinearLayoutManager(this));
+
+
+
+
 
 
          if(savedInstanceState ==null){
@@ -49,18 +66,27 @@ public class verCliente extends AppCompatActivity {
              id = (int) savedInstanceState.getSerializable("id");
          }
 
+
         dbClientes dbclientes = new dbClientes(verCliente.this);
-         cliente = dbclientes.mostrarCliente(id);
+        listaCCvehiculos = new ArrayList<>();
+        lista_VehiculosCliente_adapter adapter = new lista_VehiculosCliente_adapter(dbclientes.listadoVehiculosCliente(id));
+        listaVehiculosCliente.setAdapter(adapter);
+
+
 
          if (cliente !=null){
              nombretxt.setText(cliente.getNombre());
              idtext.setText(String.valueOf(cliente.getId()));
+
          }
          if (!modoEdicion){
              editarBtn.setVisibility(View.INVISIBLE);
              eliminarBtn.setVisibility(View.INVISIBLE);
              nombretxt.setInputType(InputType.TYPE_NULL);
          }
+
+
+
 
 
 
