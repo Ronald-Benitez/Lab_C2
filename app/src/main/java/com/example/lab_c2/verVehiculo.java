@@ -61,6 +61,7 @@ public class verVehiculo extends AppCompatActivity {
         }else{
             vehiculoB.setText("Registrar");
             estadoVehiculo.setText("Disponible");
+            estadoVehiculo.setVisibility(View.INVISIBLE);
         }
 
         vehiculoB.setOnClickListener(new View.OnClickListener() {
