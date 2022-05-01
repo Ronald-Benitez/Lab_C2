@@ -71,7 +71,7 @@ public class verCliente extends AppCompatActivity {
         listaCCvehiculos = new ArrayList<>();
         lista_VehiculosCliente_adapter adapter = new lista_VehiculosCliente_adapter(dbclientes.listadoVehiculosCliente(id));
         listaVehiculosCliente.setAdapter(adapter);
-
+        cliente = dbclientes.mostrarCliente(id);
 
 
          if (cliente !=null){
