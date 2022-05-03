@@ -102,7 +102,7 @@ public class dbClientes extends dbHelper{
 
                 }while (cursor.moveToNext());
             }cursor.close();
-            Toast.makeText(context, "Consulta hecha", Toast.LENGTH_SHORT).show();
+
             db.close();
         }
         catch (Exception e){
